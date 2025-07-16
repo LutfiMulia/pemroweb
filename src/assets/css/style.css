@@ -1,0 +1,131 @@
+/* ======== Warna Dasar & Global ======== */
+body {
+    background-color: #e1bfd6;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* ======== Navbar ======== */
+.navbar {
+    background-color: #ffc0cb !important;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: white !important;
+}
+
+/* ======== Tombol Utama Pink ======== */
+.btn-pink {
+    background-color: #ffb6c1;
+    color: white;
+    border: none;
+    transition: 0.3s ease;
+}
+
+.btn-pink:hover {
+    background-color: #ff69b4;
+    color: white;
+}
+
+/* Tombol outline abu */
+.btn-outline-secondary:hover {
+    background-color: #ffb6c1;
+    color: white;
+}
+
+/* ======== Tabel ======== */
+.table thead {
+    background-color: rgb(247, 143, 179);
+    color: white;
+}
+
+/* ======== Kartu & Box ======== */
+.card-custom {
+    background-color: #ffe4e1;
+    border: none;
+    border-left: 8px solid #ff69b4;
+}
+
+.bg-pink {
+    background-color: #ff69b4;
+    border-left: 6px solid #ff1493;
+    color: white; /* semua teks jadi putih */
+}
+
+.bg-pink h6,
+.bg-pink h2 {
+    color: white !important;
+}
+
+
+/* ======== Sidebar Dashboard ======== */
+.sidebar {
+    width: 270px; /* Ubah dari 240px ke 270px */
+    background-color: #ff69b4;
+    color: white;
+    min-height: 100vh;
+    padding: 20px 18px;
+    position: sticky;
+    top: 0;
+}
+
+.sidebar .nav-link {
+    color: white;
+    padding: 10px 16px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    font-size: 1rem;
+    white-space: nowrap;       /* Supaya teks gak turun ke bawah */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* ======== Main Content Area ======== */
+.main-content {
+    flex-grow: 1;
+    padding: 30px;
+    background-color: #fff0f5;
+}
+
+.welcome-box {
+    background-color: #ff69b4;
+    color: white; /* semua teks dalam box jadi putih */
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* Tambahan jika ada override warna teks dari tempat lain */
+.welcome-box h3,
+.welcome-box p {
+    color: white !important;
+}
+
+
+/* ======== Grafik ======== */
+canvas {
+    max-width: 100%;
+}
+
+/* ======== Responsif Tambahan ======== */
+@media (max-width: 768px) {
+    .dashboard-wrapper {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        min-height: auto;
+        position: relative;
+    }
+
+    .main-content {
+        padding: 20px;
+    }
+}
+
