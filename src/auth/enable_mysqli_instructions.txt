@@ -1,0 +1,25 @@
+How to Enable mysqli Extension in XAMPP:
+
+1. Open XAMPP Control Panel
+2. Stop Apache if it's running
+3. Find your php.ini file:
+   - Click "Config" next to Apache
+   - Select "PHP (php.ini)"
+   
+4. In php.ini file, find this line:
+   ;extension=mysqli
+   
+5. Remove the semicolon (;) to uncomment it:
+   extension=mysqli
+   
+6. Save the file
+7. Start Apache again
+
+Alternative locations for php.ini:
+- C:\xampp\php\php.ini
+- C:\xampp\apache\bin\php.ini
+
+After enabling mysqli, you can run:
+php create_table.php
+
+This will create the password_resets table automatically.

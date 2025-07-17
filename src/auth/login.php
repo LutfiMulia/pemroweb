@@ -144,7 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </label>
                         </div>
                         <div class="text-sm">
-                            <a href="#" class="font-medium text-accent-pink hover:underline">
+                            <a href="forgot-password.php" class="font-medium text-accent-pink hover:underline">
                                 Forgot your password?
                             </a>
                         </div>
