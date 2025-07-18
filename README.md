@@ -1,84 +1,120 @@
 ## 🛡️ Inisidentia – Sistem Pelaporan Insiden
 
-Deskripsi Singkat:
+## Deskripsi Singkat:
 Inisidentia adalah aplikasi web untuk mengelola pelaporan dan penanganan insiden, dilengkapi dengan fitur CRUD dan pelaporan. Aplikasi ini dibangun menggunakan:
 1. Frontend: HTML, CSS (Bootstrap)
 2. Backend: PHP Native (versi ≥ 7.4)
 3. Database: MySQL (versi ≥ 5.7)
 
 ## 📁 Struktur Folder
-
+```
 Insidentia/
-├── src/
-│   ├── admin/                  # Modul untuk administrator
-│   │   ├── categories.php
-│   │   ├── dashboard.php
-│   │   ├── incidents.php
-│   │   ├── locations.php
-│   │   ├── priorities.php
-│   │   ├── reports.php
-│   │   ├── settings.php
-│   │   ├── statuses.php
-│   │   └── users.php
-│   │
-│   ├── auth/                   # Modul autentikasi pengguna
-│   │   ├── login.php
-│   │   ├── logout.php
-│   │   └── register.php
-│   │
-│   ├── includes/               # File konfigurasi & utilitas
-│   │   ├── config.php
-│   │   ├── functions.php
-│   │   ├── header.php
-│   │   ├── footer.php
-│   │   └── auth_check.php
-│   │
-│   ├── user/                   # Modul untuk pengguna pelapor
-│   │   ├── dashboard.php
-│   │   ├── report_incident.php
-│   │   ├── my_incidents.php
-│   │   └── settings.php
-│   │
-│   ├── assets/                 # Aset statis (CSS, JS, gambar)
+├── public/                     // Folder untuk file yang dapat diakses publik
+│   ├── assets/                 // CSS, JS, Gambar, dll.
 │   │   ├── css/
 │   │   │   └── style.css
 │   │   ├── js/
 │   │   │   └── script.js
 │   │   └── img/
-│   │       ├── gambarlogin.png
+│   │       ├── login2.jpg
 │   │       ├── logo.png
 │   │       └── welcome.jpg
+│   └── index.php               // Halaman utama atau titik masuk aplikasi
+│
+├── sql/                        // Skrip database
+│   ├── schema.sql              // Skrip untuk membuat tabel
+│   └── data.sql                // Skrip untuk data awal (seperti admin, kategori default)
+│
+├── src/                        // Kode sumber aplikasi
+│   ├── admin/                  // Halaman dan logika untuk admin
+│   │   ├── dashboard.php
+│   │   ├── incidents.php
+│   │   └── ... (file admin lainnya seperti categories.php, users.php, dll.)
 │   │
-│   └── index.php               # Halaman utama aplikasi
+│   ├── assets/                 // Aset yang mungkin digunakan oleh framework (di luar public)
+│   │
+│   ├── auth/                   // Halaman dan logika otentikasi
+│   │   ├── login.php
+│   │   ├── logout.php
+│   │   ├── register.php
+│   │   └── ... (file terkait auth lainnya seperti forgot-password.php)
+│   │
+│   ├── debug/                  // Skrip atau alat untuk debugging
+│   │   └── create_admin.php
+│   │
+│   ├── includes/               // File-file yang di-include atau dibutuhkan
+│   │   ├── auth_check.php      // Pengecekan sesi dan peran pengguna
+│   │   ├── config.php          // Konfigurasi database dan global
+│   │   ├── functions.php       // Kumpulan fungsi helper
+│   │   ├── header.php          // Bagian header HTML
+│   │   └── footer.php          // Bagian footer HTML
+│   │
+│   └── user/                   // Halaman dan logika untuk pengguna biasa
+│       ├── dashboard.php
+│       ├── my_incidents.php
+│       ├── report_incident.php
+│       └── settings.php
 │
-├── sql/                        # Skrip SQL untuk database
-│   ├── schema.sql
-│   └── data.sql
+├── app/                        // Kemungkinan folder ini untuk framework (seperti INSIDENTIA di gambar 2)
+│   ├── Config/                 // Konfigurasi aplikasi
+│   │   ├── App.php
+│   │   └── Database.php
+│   │
+│   ├── Controllers/
+│   │   └── BaseController.php
+│   │
+│   ├── Middleware/
+│   ├── Models/
+│   │   └── BaseModel.php
+│   │
+│   ├── Services/
+│   ├── Utils/
+│   ├── Views/                  // File tampilan (HTML/PHP)
+│   │   ├── admin/
+│   │   ├── auth/
+│   │   ├── components/
+│   │   ├── layouts/
+│   │   └── user/
+│   │
+│   └── database/
 │
-└── README.md                   # Dokumentasi utama proyek
-
-## 💾 Struktur Database
-Tabel-tabel utama:
-
-roles: Daftar peran pengguna.
-users: Data pengguna.
-incident_categories: Kategori insiden.
-incident_priorities: Prioritas insiden.
-incident_statuses: Status insiden.
-departments: Lokasi/departemen insiden.
-incidents: Data laporan insiden.
-incident_logs: Riwayat update insiden.
-activity_logs: Log aktivitas pengguna.
-attachments: File pendukung insiden.
-settings: Konfigurasi sistem.
+├── database/                   // Folder lain untuk skrip database atau migrasi
+│
+├── storage/                    // Penyimpanan file (cache, logs, dll.)
+│   ├── cache/
+│   └── logs/
+│
+├── docs/                       // Dokumentasi proyek
+│   ├── installation.md
+│   ├── usage.md
+│   └── ... (file dokumentasi lainnya seperti DATABASE_STRUCTURE.md)
+│
+└── README.md                   // Panduan singkat proyek
+```
+# 💾 Struktur Database
+Proyek ini menggunakan beberapa tabel utama untuk mengelola data insiden, pengguna, dan konfigurasi sistem. Berikut adalah tabel-tabel utamanya beserta deskripsi singkat:
+### Tabel-tabel Utama
+| Nama Tabel | Deskripsi |
+| :--- | :--- |
+| `roles` | Menyimpan daftar peran pengguna (misalnya: `admin`, `user`). |
+| `users` | Berisi data pengguna seperti nama, email, password, dan `role_id` untuk mengidentifikasi peran mereka. |
+| `incident_categories` | Mengelola kategori insiden yang tersedia (misalnya: `Hardware`, `Software`, `Jaringan`). |
+| `incident_priorities`| Mendefinisikan tingkat prioritas insiden (misalnya: `Low`, `Medium`, `High`). |
+| `incident_statuses` | Menyimpan status insiden saat ini (misalnya: `Open`, `In Progress`, `Resolved`, `Closed`). |
+| `departments` | Daftar lokasi atau departemen tempat insiden terjadi. |
+| `incidents` | Tabel inti yang berisi semua laporan insiden, termasuk detail seperti judul, deskripsi, `category_id`, `priority_id`, `status_id`, `department_id`, dan `user_id` pelapor. |
+| `incident_logs` | Mencatat riwayat setiap perubahan atau pembaruan pada sebuah insiden. |
+| `activity_logs` | Menyimpan log aktivitas pengguna dalam aplikasi. |
+| `attachments` | Mengelola file pendukung atau lampiran yang diunggah untuk sebuah insiden. |
+| `settings` | Berisi konfigurasi sistem yang dapat diatur oleh admin. |
 
 # Incident Management System – ER Diagram
 
 Proyek ini merupakan bagian dari pengembangan sistem manajemen insiden (Incident Management System) yang bertujuan untuk mencatat, mengelola, dan memantau laporan insiden dari pengguna dalam suatu organisasi. Desain ER Diagram ini dirancang untuk mendukung berbagai fitur seperti pelaporan insiden, log aktivitas, lampiran, hingga pengelolaan status dan prioritas insiden.
 
-## 📌 Struktur Entitas dan Relasi
-
-Diagram ini terdiri dari beberapa tabel utama dengan relasi yang jelas antar entitas. Berikut penjelasan dari masing-masing entitas dan fungsinya:
+## 📊 Entity Relationship Diagram (ERD)
+Berikut adalah diagram relasi database dari aplikasi ini:
+![ERD](docs/projekpw.png)
 
 ### 🔐 `roles`
 Menyimpan data peran pengguna dalam sistem (misal: Admin, Staff, User).
@@ -181,11 +217,23 @@ Menyimpan konfigurasi umum sistem.
 
 ---
 
-## 🧩 Tools yang Digunakan
+## 🛠️ Alat dan Teknologi
+Proyek ini dibangun dan dikelola menggunakan kombinasi beberapa alat dan teknologi utama:
+### Pengembangan & Database
+- **Visual Studio Code (VS Code)**: Digunakan sebagai editor kode utama untuk pengembangan aplikasi.
+- **XAMPP**: Lingkungan pengembangan web lokal yang mencakup server Apache, PHP, dan **MySQL/MariaDB**.
+- **MySQL / MariaDB**: Sistem manajemen basis data relasional (RDBMS) yang digunakan untuk menyimpan data aplikasi.
 
-- [dbdiagram.io](https://dbdiagram.io) — Untuk memvisualisasikan ER Diagram dalam format DBML.
-- MySQL / MariaDB — Rencana implementasi ke basis data.
-- SQL DDL / DBML — Dua format dokumentasi diagram.
+### Dokumentasi & Visualisasi
+- **dbdiagram.io**: Alat visualisasi online untuk membuat **ER (Entity-Relationship) Diagram** database dalam format **DBML**.
+
+### Pengembangan & Database
+- **Visual Studio Code (VS Code)**: Digunakan sebagai editor kode utama untuk pengembangan aplikasi.
+- **XAMPP**: Lingkungan pengembangan web lokal yang mencakup server Apache, PHP, dan **MySQL/MariaDB**.
+- **MySQL / MariaDB**: Sistem manajemen basis data relasional (RDBMS) yang digunakan untuk menyimpan data aplikasi.
+
+### Dokumentasi & Visualisasi
+- **dbdiagram.io**: Alat visualisasi online untuk membuat **ER (Entity-Relationship) Diagram** database dalam format **DBML**.
 
 ---
 
@@ -205,6 +253,8 @@ Beberapa contoh relasi utama:
 3. Logout akan menghancurkan session.
 4. Proteksi halaman CRUD dan laporan berdasarkan peran pengguna.
 
+---
+
 ## 🔧 Modul CRUD Admin:
 Modul-modul ini memungkinkan administrator untuk mengelola data master dan insiden dalam sistem:
 
@@ -215,6 +265,8 @@ Modul-modul ini memungkinkan administrator untuk mengelola data master dan insid
 5. Manajemen Lokasi/Departemen (admin/locations.php): Tambah, Edit, Hapus, Lihat daftar lokasi/departemen.
 6. Manajemen Insiden (admin/incidents.php): Melihat semua insiden, mengubah status insiden.
 
+---
+
 ## Setiap modul CRUD memiliki halaman untuk:
 
 1. Tambah data baru
@@ -222,30 +274,40 @@ Modul-modul ini memungkinkan administrator untuk mengelola data master dan insid
 3. Hapus data
 4. Melihat daftar data dalam format tabel (dilengkapi dengan Bootstrap dan potensi paginasi).
 
+---
 ## ⚙️ Instalasi
-1. Prasyarat
-   - PHP 7.4+
-   - MySQL 5.7+
-   - Web server (Apache via XAMPP, WAMP, Laragon)
-
-2. Clone Proyek
-   - git clone https://github.com/username/inisidentia.git
-
+Ikuti langkah-langkah di bawah ini untuk menjalankan proyek secara lokal di komputer Anda.
+### 1. Prasyarat
+Pastikan Anda telah menginstal lingkungan server web lokal dengan komponen-komponen berikut:
+- **PHP** versi 7.4 atau lebih tinggi
+- **MySQL** versi 5.7 atau lebih tinggi
+- **Web server** (seperti Apache) yang biasanya tersedia dalam paket seperti XAMPP, WAMP, atau Laragon.
+### 2. Clone Proyek
+Buka terminal atau command prompt dan jalankan perintah berikut untuk meng-clone repositori:
+```bash
+git clone [https://github.com/username/inisidentia.git](https://github.com/username/inisidentia.git)
+```
 3. Setup Database
-   - Buat database inisidentia_db
-   - Import sql/schema.sql
-   - (Opsional) Import sql/data.sql untuk data awal
-
+Buat database baru di MySQL dengan nama inisidentia_db.
+- Import file sql/schema.sql ke dalam database yang baru dibuat untuk membuat semua tabel.
+- (Opsional) Import file sql/data.sql jika Anda ingin menyertakan data awal (misalnya, akun admin atau data dummy).
+  
 4. Konfigurasi Koneksi
-Edit src/includes/config.php:
+Buka file src/includes/config.php dan sesuaikan detail koneksi database sesuai dengan konfigurasi Anda:
+```
+<?php
+// ...
 define('DB_SERVER', 'localhost');
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', '');
 define('DB_NAME', 'inisidentia_db');
+// ...
+?>
+```
 
 5. Jalankan Aplikasi
-   - Pindahkan folder ke htdocs/ atau www/
-   - Akses di browser: http://localhost/Insidentia/src/
+   - Pindahkan folder proyek Insidentia ke direktori web server Anda (biasanya htdocs/ untuk XAMPP atau www/ untuk WAMP).
+   - Buka browser web Anda dan kunjungi URL berikut untuk mengakses aplikasi: http://localhost/Insidentia/src/index.php
 
 ## 📘 Panduan Penggunaan
     - Login : Gunakan akun dari data.sql atau buat akun baru
@@ -255,7 +317,15 @@ define('DB_NAME', 'inisidentia_db');
     - Logout : Gunakan tombol logout untuk keluar dari sistem dengan aman
 
 ## 📣 Penutup
-Inisidentia adalah solusi pelaporan insiden yang efisien, terorganisir, dan mudah digunakan. Didesain untuk skalabilitas dan kemudahan integrasi ke dalam berbagai organisasi atau instansi.
+
+Inisidentia adalah solusi pelaporan insiden yang dirancang untuk efisiensi, keteraturan, dan kemudahan penggunaan. Aplikasi ini bertujuan untuk menyederhanakan proses pelaporan, pelacakan, dan pengelolaan insiden di berbagai organisasi atau instansi. Dengan struktur yang terorganisir, Inisidentia dibuat agar mudah disesuaikan dan diintegrasikan, menjadikannya pilihan yang andal untuk kebutuhan manajemen insiden.
+
+---
+
+## 📝 Lisensi
+
+Proyek ini dirilis di bawah lisensi MIT.
+Hak Cipta (c) 2024 Lutfi Mulia
 
 
 
