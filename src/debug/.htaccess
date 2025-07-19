@@ -1,0 +1,8 @@
+# Blokir semua akses ke direktori debug dalam produksi
+Order Deny,Allow
+Deny from all
+
+# Hanya izinkan akses dari localhost untuk development
+Allow from 127.0.0.1
+Allow from ::1
+Allow from localhost

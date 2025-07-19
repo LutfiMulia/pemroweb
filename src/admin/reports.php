@@ -1,5 +1,5 @@
 <?php
-require_once '../includes/auth_check.php';
+require_once '../includes/admin_check.php';
 require_once '../includes/config.php';
 require_once '../includes/functions.php';
 
@@ -69,6 +69,22 @@ while ($row = $result->fetch_assoc()) {
         }
         .btn-pink:hover {
             background-color: #ff1493;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline-pink {
+            background-color: transparent;
+            color: #ff69b4;
+            border: 2px solid #ff69b4;
+            font-weight: bold;
+            transition: 0.3s ease;
+            border-radius: 8px;
+            padding: 10px 20px;
+        }
+        
+        .btn-outline-pink:hover {
+            background-color: #ff69b4;
             color: white;
             transform: translateY(-2px);
         }
@@ -162,6 +178,19 @@ while ($row = $result->fetch_assoc()) {
         <!-- MAIN CONTENT -->
         <div class="col-md-9 p-4">
             <h2 class="text-center fw-bold section-title mb-4"><i class="bi bi-bar-chart-line me-2"></i>Laporan Ringkasan Insiden Berdasarkan Status</h2>
+            
+            <!-- Tombol Cetak PDF -->
+            <div class="text-center mb-4">
+                <button onclick="printPDF()" class="btn btn-pink me-2">
+                    <i class="bi bi-file-pdf me-2"></i>Cetak PDF
+                </button>
+                <button onclick="previewReport()" class="btn btn-outline-pink me-2">
+                    <i class="bi bi-eye me-2"></i>Preview Laporan
+                </button>
+                <button onclick="exportExcel()" class="btn btn-outline-pink">
+                    <i class="bi bi-file-excel me-2"></i>Export Excel
+                </button>
+            </div>
 
             <div class="table-container mb-4">
                 <div class="table-responsive">
@@ -257,6 +286,43 @@ while ($row = $result->fetch_assoc()) {
             }
         }
     });
+    
+    // Fungsi untuk cetak PDF
+    function printPDF() {
+        // Open PDF in new tab
+        window.open('generate_pdf_report.php?pdf=1', '_blank');
+    }
+    
+    // Fungsi untuk preview HTML
+    function previewReport() {
+        window.open('generate_pdf_report.php', '_blank', 'width=1200,height=800,scrollbars=yes');
+    }
+    
+    // Fungsi untuk export Excel
+    function exportExcel() {
+        // Convert table to CSV format
+        let csv = 'Status,Jumlah Insiden,Persentase\n';
+        const tableRows = document.querySelectorAll('.table tbody tr');
+        
+        tableRows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length >= 3) {
+                const status = cells[0].textContent.trim();
+                const jumlah = cells[1].textContent.trim();
+                const persentase = cells[2].textContent.trim();
+                csv += `"${status}","${jumlah}","${persentase}"\n`;
+            }
+        });
+        
+        // Create and download CSV file
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'laporan_insiden_' + new Date().getTime() + '.csv';
+        a.click();
+        window.URL.revokeObjectURL(url);
+    }
 </script>
 
 </body>

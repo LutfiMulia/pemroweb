@@ -1,10 +1,10 @@
 <?php
-require_once '../includes/auth_check.php';
+require_once '../includes/user_check.php';
 require_once '../includes/config.php';
 require_once '../includes/functions.php';
 
-// Cek kalau bukan pelapor
-if ($_SESSION['role'] !== 'pelapor') {
+// Cek kalau bukan user/pelapor
+if ($_SESSION['role'] !== 'user' && $_SESSION['role'] !== 'pelapor') {
     redirect('../auth/logout.php');
 }
 
