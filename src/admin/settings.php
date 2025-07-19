@@ -1,23 +1,71 @@
 <?php
-require_once '../includes/auth_check.php';
+require_once '../includes/admin_check.php';
 require_once '../includes/config.php';
 require_once '../includes/functions.php';
 
 // Ambil semua setting dari database
 $settings = [];
+$default_settings = [
+    'default_incident_status' => 'Terbuka',
+    'max_incidents_per_day' => '50', 
+    'registration_enabled' => 'true',
+    'notify_admin_on_new_incident' => 'true'
+];
+
 $query = $conn->query("SELECT * FROM settings");
-while ($row = $query->fetch_assoc()) {
-    $settings[$row['setting_key']] = $row;
+if ($query) {
+    while ($row = $query->fetch_assoc()) {
+        $settings[$row['setting_key']] = $row;
+    }
 }
+
+// Function untuk mendapatkan setting value dengan default
+function getSetting($key, $settings, $default_settings) {
+    if (isset($settings[$key]['setting_value'])) {
+        return $settings[$key]['setting_value'];
+    }
+    return $default_settings[$key] ?? '';
+}
+
+// Variable untuk notifikasi
+$success_message = '';
 
 // Proses update setting
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $updated_count = 0;
     foreach ($_POST as $key => $value) {
-        $stmt = $conn->prepare("UPDATE settings SET setting_value = ? WHERE setting_key = ?");
-        $stmt->bind_param("ss", $value, $key);
-        $stmt->execute();
+        // Cek apakah setting sudah ada
+        $check = $conn->prepare("SELECT id FROM settings WHERE setting_key = ?");
+        $check->bind_param("s", $key);
+        $check->execute();
+        $result = $check->get_result();
+        
+        if ($result->num_rows > 0) {
+            // Update existing
+            $stmt = $conn->prepare("UPDATE settings SET setting_value = ? WHERE setting_key = ?");
+            $stmt->bind_param("ss", $value, $key);
+        } else {
+            // Insert new
+            $stmt = $conn->prepare("INSERT INTO settings (setting_key, setting_value) VALUES (?, ?)");
+            $stmt->bind_param("ss", $key, $value);
+        }
+        if ($stmt->execute()) {
+            $updated_count++;
+        }
     }
-    redirect('settings.php'); // Refresh halaman
+    
+    if ($updated_count > 0) {
+        $success_message = "Pengaturan berhasil disimpan! ($updated_count setting diupdate)";
+    }
+    
+    // Refresh data settings
+    $settings = [];
+    $query = $conn->query("SELECT * FROM settings");
+    if ($query) {
+        while ($row = $query->fetch_assoc()) {
+            $settings[$row['setting_key']] = $row;
+        }
+    }
 }
 ?>
 
@@ -128,30 +176,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- MAIN CONTENT -->
         <div class="col-md-9 p-4">
             <h2 class="mb-4 text-center section-title"><i class="bi bi-gear me-2"></i>Pengaturan Sistem</h2>
+            
+            <?php if ($success_message): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle me-2"></i><?= $success_message ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
 
             <form method="post" class="settings-card">
                 <div class="mb-3">
                     <label class="form-label">Status Default Insiden</label>
                     <input type="text" name="default_incident_status" class="form-control"
-                        value="<?= htmlspecialchars($settings['default_incident_status']['setting_value']) ?>">
+                        value="<?= htmlspecialchars(getSetting('default_incident_status', $settings, $default_settings)) ?>">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Max Insiden per Hari</label>
                     <input type="number" name="max_incidents_per_day" class="form-control"
-                        value="<?= htmlspecialchars($settings['max_incidents_per_day']['setting_value']) ?>">
+                        value="<?= htmlspecialchars(getSetting('max_incidents_per_day', $settings, $default_settings)) ?>">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Pendaftaran Diperbolehkan</label>
                     <select name="registration_enabled" class="form-select">
-                        <option value="true" <?= $settings['registration_enabled']['setting_value'] === 'true' ? 'selected' : '' ?>>Ya</option>
-                        <option value="false" <?= $settings['registration_enabled']['setting_value'] === 'false' ? 'selected' : '' ?>>Tidak</option>
+                        <option value="true" <?= getSetting('registration_enabled', $settings, $default_settings) === 'true' ? 'selected' : '' ?>>Ya</option>
+                        <option value="false" <?= getSetting('registration_enabled', $settings, $default_settings) === 'false' ? 'selected' : '' ?>>Tidak</option>
                     </select>
                 </div>
                 <div class="mb-4">
                     <label class="form-label">Notifikasi ke Admin Saat Ada Insiden Baru</label>
                     <select name="notify_admin_on_new_incident" class="form-select">
-                        <option value="true" <?= $settings['notify_admin_on_new_incident']['setting_value'] === 'true' ? 'selected' : '' ?>>Aktif</option>
-                        <option value="false" <?= $settings['notify_admin_on_new_incident']['setting_value'] === 'false' ? 'selected' : '' ?>>Nonaktif</option>
+                        <option value="true" <?= getSetting('notify_admin_on_new_incident', $settings, $default_settings) === 'true' ? 'selected' : '' ?>>Aktif</option>
+                        <option value="false" <?= getSetting('notify_admin_on_new_incident', $settings, $default_settings) === 'false' ? 'selected' : '' ?>>Nonaktif</option>
                     </select>
                 </div>
                 <div class="text-center">

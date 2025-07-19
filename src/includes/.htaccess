@@ -1,0 +1,13 @@
+# Blokir akses langsung ke file di direktori includes
+Order Deny,Allow
+Deny from all
+
+# Hanya izinkan akses dari script PHP
+<Files "*.php">
+    Order Allow,Deny
+    Allow from all
+    # Tetapi tetap blokir akses langsung via browser
+    <If "%{HTTP_REFERER} == ''">
+        Deny from all
+    </If>
+</Files>

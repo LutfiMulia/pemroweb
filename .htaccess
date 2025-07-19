@@ -1,0 +1,10 @@
+# Insidentia Security Configuration
+
+# Disable directory browsing
+Options -Indexes
+
+# Block access to sensitive files
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|sql|bak)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
