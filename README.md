@@ -1,4 +1,8 @@
 # 🛡️ INSIDENTIA – Sistem Pelaporan Insiden
+## 🌐 Demo & Hosting
+
+- 📽️ [Video Presentasi](https://youtu.be/9dxe7OgX1wQ?si=o6GF1r6erUwCTj0T)
+- 🖥️ [Live Hosting](https://lutfimulia.mangaverse.my.id)
 
 <div align="center">
   <img src="public/assets/img/logo.png" alt="Insidentia Logo" width="150">
